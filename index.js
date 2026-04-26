@@ -122,26 +122,28 @@ client.on('interactionCreate', async interaction => {
                 color: 0x2b2d31
             };
 
-            const button = {
-                type: 1,
-                components: [
-                    {
-                        type: 2,
-                        label: "Send Links",
-                        style: 1,
-                        custom_id: `respond_${userId}`
-                    }
-                ]
-            };
+const components = [
+    {
+        type: 1,
+        components: [
+            {
+                type: 2,
+                label: "Send Links",
+                style: 1,
+                custom_id: `respond_${userId}`
+            }
+        ]
+    }
+];
 
-            await fetch(process.env.WEBHOOK_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    embeds: [embed],
-                    components: [button]
-                })
-            });
+await fetch(process.env.WEBHOOK_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+        embeds: [embed],
+        components: components
+    })
+});
 
             return interaction.reply({
                 content: "Order submitted! Check your DMs.",
