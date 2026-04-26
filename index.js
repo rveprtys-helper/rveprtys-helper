@@ -14,6 +14,8 @@ const {
 const fs = require('fs');
 const fetch = require('node-fetch');
 
+const jackpotLeaderboard = new Map();
+
 const client = new Client({
     intents: [GatewayIntentBits.Guilds]
 });
