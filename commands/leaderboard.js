@@ -1,7 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 const { jackpotLeaderboard } = require('../utils/store');
-const jackpotLeaderboard = require('../index').jackpotLeaderboard;
 
 module.exports = {
     data: new SlashCommandBuilder()
