@@ -16,12 +16,12 @@ module.exports = {
             symbols[Math.floor(Math.random() * symbols.length)]
         ];
 
-        let resultText = "Better luck next time!";
+        let resultText = "Better luck next time! YOU FAILED";
         let color = 0xff0000;
 
 
         if (spin[0] === spin[1] && spin[1] === spin[2]) {
-            resultText = "JACKPOT 🎉";
+            resultText = "JACKPOT, GAMBLING W";
             color = 0x00ff00;
         } else if (spin[0] === spin[1] || spin[1] === spin[2] || spin[0] === spin[2]) {
             resultText = "Nice! You got a match";
