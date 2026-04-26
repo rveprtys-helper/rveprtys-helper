@@ -2,13 +2,38 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 const symbols = ['🍒', '🍋', '🍉', '⭐', '💎', '🍀'];
 
+
+const cooldowns = new Map();
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('slots')
-        .setDescription('LETS GO GAMBLING'),
+        .setDescription('Spin the slot machine'),
 
     async execute(interaction) {
+        const userId = interaction.user.id;
+        const now = Date.now();
+        const cooldownTime = 30 * 1000; 
 
+
+        if (cooldowns.has(userId)) {
+            const expiration = cooldowns.get(userId) + cooldownTime;
+
+            if (now < expiration) {
+                const timeLeft = ((expiration - now) / 1000).toFixed(1);
+
+                return interaction.reply({
+                    content: `⏳ You need to wait ${timeLeft}s before using this again.`,
+                    ephemeral: true
+                });
+            }
+        }
+
+
+        cooldowns.set(userId, now);
+
+
+        setTimeout(() => cooldowns.delete(userId), cooldownTime);
 
         const spin = [
             symbols[Math.floor(Math.random() * symbols.length)],
@@ -18,7 +43,6 @@ module.exports = {
 
         let resultText = "Better luck next time! YOU FAILED";
         let color = 0xff0000;
-
 
         if (spin[0] === spin[1] && spin[1] === spin[2]) {
             resultText = "JACKPOT, GAMBLING W";
