@@ -15,6 +15,14 @@ const fs = require('fs');
 const fetch = require('node-fetch');
 
 const jackpotLeaderboard = new Map();
+const mongoose = require('mongoose');
+
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log("MongoDB connected"))
+    .catch(err => {
+        console.error(err);
+        process.exit(1);
+    });
 
 const client = new Client({
     intents: [GatewayIntentBits.Guilds]
