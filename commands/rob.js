@@ -38,10 +38,32 @@ module.exports = {
             return interaction.reply({ content: "❌ Target is too poor to rob.", ephemeral: true });
         }
 
-        const success = Math.random() < 0.5;
+        const victimTotal = victim.balance + victim.bank;
+
+        if (victimTotal > user.balance * 5) {
+            return interaction.reply({
+                content: "❌ This target is too powerful to rob.",
+                ephemeral: true
+            });
+        }
+
+        let successChance = 0.6;
+
+        if (victimTotal > 1000) successChance = 0.5;
+        if (victimTotal > 5000) successChance = 0.4;
+        if (victimTotal > 10000) successChance = 0.3;
+        if (victimTotal > 25000) successChance = 0.2;
+        if (victimTotal > 50000) successChance = 0.1;
+
+        const success = Math.random() < successChance;
 
         if (success) {
-            const amount = Math.floor(victim.balance * 0.3);
+            const amount = Math.floor(
+                Math.min(
+                    victim.balance * (0.15 + Math.random() * 0.15),
+                    4000
+                )
+            );
 
             victim.balance -= amount;
             user.balance += amount;
@@ -54,11 +76,17 @@ module.exports = {
                     new EmbedBuilder()
                         .setTitle('💰 Rob Success')
                         .setDescription(`You stole **$${amount}** from ${target.username}`)
+                        .setFooter({ text: `Success chance: ${Math.round(successChance * 100)}%` })
                         .setColor(0x00ff00)
                 ]
             });
         } else {
-            const penalty = Math.floor(user.balance * 0.2);
+            const penalty = Math.floor(
+                Math.max(
+                    user.balance * 0.15,
+                    200
+                )
+            );
 
             user.balance -= penalty;
             await user.save();
@@ -68,6 +96,7 @@ module.exports = {
                     new EmbedBuilder()
                         .setTitle('🚨 Rob Failed')
                         .setDescription(`You got caught and lost **$${penalty}**`)
+                        .setFooter({ text: `Success chance: ${Math.round(successChance * 100)}%` })
                         .setColor(0xff0000)
                 ]
             });
